@@ -17,6 +17,23 @@ lazy_static! {
             h: BigUint::from_str("9").unwrap(),
         }
     };
+
+    pub static ref PALLAS_GROUP_PARAMS: GroupParams<PallasPoint> = {
+        GroupParams::<PallasPoint> {
+            g: <PallasPoint as FromBytes<PallasPoint>>::from(
+                convert(&hex::decode("f9abd1b1a37af310baa363ed031ef5613fb474f1780dc8fc767c2b1480da582b").unwrap()).unwrap()
+            ).unwrap(),
+            h: <PallasPoint as FromBytes<PallasPoint>>::from(
+                convert(&hex::decode("8f1339a6e025db7854f67838a42764b870e85e991e7b2e6570c5e5fee6e5c30c").unwrap()).unwrap()
+            ).unwrap(),
+            p: <PallasPoint as FromBytes<PallasPoint>>::from(
+                convert(&hex::decode("0000000000000000000000000000000000000000000000000000000000000000").unwrap()).unwrap()
+            ).unwrap(),
+            q: <PallasPoint as FromBytes<PallasPoint>>::from(
+                convert(&hex::decode("0000000000000000000000000000000000000000000000000000000000000000").unwrap()).unwrap()
+            ).unwrap(),
+        }
+    };
 }
 
 fn convert(vec: &Vec<u8>) -> Result<&[u8; 32], &'static str> {
