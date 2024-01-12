@@ -6,3 +6,23 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+anyhow.workspace = true
+chaum_pedersen = { path = "../chaum_pedersen" }
+log.workspace = true
+num-bigint.workspace = true
+pasta_curves.workspace = true
+prost-types.workspace = true
+prost.workspace = true
+structopt.workspace = true
+strum.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+tonic.workspace = true
+uuid.workspace = true
+
+[build-dependencies]
+tonic-build.workspace = true
+
+[dev-dependencies]
+criterion.workspace = true
+
