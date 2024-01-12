@@ -106,3 +106,25 @@ impl Random<Eq> for Eq {
     }
 }
 
+#[cfg(test)]
+mod test {
+    use super::*;
+    use crate::traits;
+    use pasta_curves::pallas;
+
+    #[test]
+    fn pallas_point_serialization() {
+        let original = <pallas::Point as traits::Random<pallas::Point>>::random().unwrap();
+        let bytes = pallas::Point::to(&original);
+        let recovered = <pallas::Point as traits::FromBytes<pallas::Point>>::from(&bytes).unwrap();
+        assert_eq!(original, recovered);
+    }
+
+    #[test]
+    fn pallas_scalar_serialization() {
+        let original = <pallas::Scalar as traits::Random<pallas::Scalar>>::random().unwrap();
+        let bytes = pallas::Scalar::to(&original);
+        let recovered = <pallas::Scalar as traits::FromBytes<pallas::Scalar>>::from(&bytes).unwrap();
+        assert_eq!(original, recovered);
+    }
+}
