@@ -61,3 +61,16 @@ impl Protocol for PallasEllipticCurve {
     }
 }
 
+impl IntoBytes<Point> for Point {
+    fn to(t: &Point) -> Vec<u8> {
+        t.to_bytes().to_vec()
+    }
+}
+
+impl FromBytes<Point> for Point {
+    fn from(bytes: &[u8]) -> Result<Point> {
+        let array: [u8; 32] = bytes.try_into().map_err(|_| EllipticCurveError::ScalarInvalidBytesLen)?;
+
+        Ok(Point::from_bytes(&array).unwrap())
+    }
+}
