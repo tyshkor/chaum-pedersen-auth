@@ -34,6 +34,23 @@ lazy_static! {
             ).unwrap(),
         }
     };
+
+    pub static ref VESTA_GROUP_PARAMS: GroupParams<VestaPoint> = {
+        GroupParams::<VestaPoint> {
+            g: <VestaPoint as FromBytes<VestaPoint>>::from(
+                convert(&hex::decode("227b13b3f09fbc6312ea3a7d150e9879fc5debc5f19e0433a0d774e7485e7ea3").unwrap()).unwrap()
+            ).unwrap(),
+            h: <VestaPoint as FromBytes<VestaPoint>>::from(
+                convert(&hex::decode("33fc580619f0b5fa23a88cb6be070033cfdb0ed10aef7491d2400ea6dd45f5a6").unwrap()).unwrap()
+            ).unwrap(),
+            p: <VestaPoint as FromBytes<VestaPoint>>::from(
+                convert(&hex::decode("0000000000000000000000000000000000000000000000000000000000000000").unwrap()).unwrap()
+            ).unwrap(),
+            q: <VestaPoint as FromBytes<VestaPoint>>::from(
+                convert(&hex::decode("0000000000000000000000000000000000000000000000000000000000000000").unwrap()).unwrap()
+            ).unwrap(),
+        }
+    };
 }
 
 fn convert(vec: &Vec<u8>) -> Result<&[u8; 32], &'static str> {
