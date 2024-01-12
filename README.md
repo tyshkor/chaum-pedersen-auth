@@ -32,6 +32,10 @@ The repository consists of 3 crate:
 
 Currently only in-memory storage is implemeted but, as the architecture is abstract it is very easy to add a database or file implementation.
 
+## Other features
+
+`BigUint` values are supported.
+
 ## Code style and organisation
 
 `Cargo fmt`, `udeps` and `taplo` were used to make sure consistent style was used in Rust, TOML files and no unused dependenices creeped into. 
