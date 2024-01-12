@@ -74,3 +74,22 @@ impl FromBytes<Point> for Point {
         Ok(Point::from_bytes(&array).unwrap())
     }
 }
+
+impl IntoBytes<Scalar> for Scalar {
+    fn to(t: &Scalar) -> Vec<u8> {
+        t.to_repr().as_slice().to_vec()
+    }
+}
+
+impl FromBytes<Scalar> for Scalar {
+    fn from(bytes: &[u8]) -> Result<Scalar> {
+        // pad the array with zeros
+        let array = |input: &[u8]| -> [u8; 64] {
+            let mut output = [0u8; 64];
+            let len = input.len().min(64);
+            output[..len].copy_from_slice(&input[..len]);
+            output
+        };
+        Ok(Scalar::from_uniform_bytes(&array(bytes)))
+    }
+}
