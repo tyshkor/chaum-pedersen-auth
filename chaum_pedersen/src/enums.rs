@@ -6,3 +6,11 @@ pub enum Flavor {
     EllipticCurve,
 }
 
+/// An enumeration representing the types of elliptic curves for which the protocol is implemented.
+#[derive(PartialEq, Debug, strum::EnumString, strum::EnumVariantNames, strum::Display)]
+#[strum(serialize_all = "snake_case")]
+pub enum EllipticCurve {
+    Pallas,
+    Vesta,
+}
+
