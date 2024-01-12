@@ -15,3 +15,9 @@ pub trait FromBytes<T> {
     where
         Self: Sized;
 }
+
+/// Trait for generating random values of a given type.
+/// /// Similar to `std::convert::Into`
+pub trait Random<T> {
+    fn random() -> Result<T>;
+}
