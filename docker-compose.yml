@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  server:
+    build:
+      context: ./
+      dockerfile: docker/Dockerfile.server
+    ports:
+      - "50051:50051"
+    environment:
+      - SERVER_HOST=0.0.0.0
+      - SERVER_PORT=50051
+      # - SERVER_TYPE=elliptic_curve
+      - CLIENT_TYPE=discrete_log
+      # - SERVER_CURVE=pallas
+      - SERVER_GROUP=modp_1024_160
+
+  client:
+    build:
+      context: ./
+      dockerfile: docker/Dockerfile.client
+    depends_on:
+      - server
+    environment:
+      - CLIENT_HOST=server
+      - CLIENT_PORT=50051
+      # - CLIENT_TYPE=elliptic_curve
+      - CLIENT_TYPE=discrete_log
+      # - CLIENT_CURVE=pallas
+      - CLIENT_GROUP=modp_1024_160
+      - CLIENT_USER=peggy
+      - CLIENT_SECRET=victor
