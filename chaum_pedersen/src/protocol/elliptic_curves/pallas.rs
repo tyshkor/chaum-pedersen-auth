@@ -93,3 +93,16 @@ impl FromBytes<Scalar> for Scalar {
         Ok(Scalar::from_uniform_bytes(&array(bytes)))
     }
 }
+
+impl Random<Fq> for Fq {
+    fn random() -> Result<Fq> {
+        Ok(<Fq as Field>::random(&mut OsRng))
+    }
+}
+
+impl Random<Eq> for Eq {
+    fn random() -> Result<Eq> {
+        Ok(<Eq as Group>::random(&mut OsRng))
+    }
+}
+
