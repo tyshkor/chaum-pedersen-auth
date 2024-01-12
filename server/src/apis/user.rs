@@ -7,3 +7,9 @@ pub struct User<T> {
     pub r2: Option<T>,
 }
 
+#[derive(Debug, Clone)]
+pub struct AuthChallenge<S> {
+    pub id: String,
+    pub user: String,
+    pub c: S,
+}
