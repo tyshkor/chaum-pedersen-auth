@@ -70,3 +70,16 @@ impl Protocol for DiscreteLog {
         lhs1 == rhs1 && lhs2 == rhs2
     }
 }
+
+impl IntoBytes<BigUint> for BigUint {
+    fn to(t: &BigUint) -> Vec<u8> {
+        t.to_bytes_be()
+    }
+}
+
+impl FromBytes<BigUint> for BigUint {
+    fn from(bytes: &[u8]) -> Result<BigUint> {
+        Ok(BigUint::from_bytes_be(bytes))
+    }
+}
+
