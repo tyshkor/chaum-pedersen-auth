@@ -62,3 +62,17 @@ impl Protocol for VestaEllipticCurve {
         (params.g * s == r1 + (y1 * c)) && (params.h * s == r2 + (y2 * c))
     }
 }
+
+impl IntoBytes<Point> for Point {
+    fn to(t: &Point) -> Vec<u8> {
+        t.to_bytes().to_vec()
+    }
+}
+
+impl FromBytes<Point> for Point {
+    fn from(bytes: &[u8]) -> Result<Point> {
+        let array: [u8; 32] = bytes.try_into().map_err(|_| EllipticCurveError::ScalarInvalidBytesLen)?;
+
+        Ok(Point::from_bytes(&array).unwrap())
+    }
+}
