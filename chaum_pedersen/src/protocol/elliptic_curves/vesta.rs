@@ -108,3 +108,23 @@ impl Random<Fp> for Fp {
     }
 }
 
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn vesta_point_serialization() {
+        let original = <Point as Random<Point>>::random().unwrap();
+        let bytes = Point::to(&original);
+        let recovered = <Point as FromBytes<Point>>::from(&bytes).unwrap();
+        assert_eq!(original, recovered);
+    }
+
+    #[test]
+    fn vesta_scalar_serialization() {
+        let original = <Scalar as Random<Scalar>>::random().unwrap();
+        let bytes = Scalar::to(&original);
+        let recovered = <Scalar as FromBytes<Scalar>>::from(&bytes).unwrap();
+        assert_eq!(original, recovered);
+    }
+}
