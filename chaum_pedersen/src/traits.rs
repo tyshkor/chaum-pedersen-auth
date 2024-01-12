@@ -1,4 +1,4 @@
-//! These traits have to be defined and implemented, as Rust quite reasonably forbids 
+//! These traits have to be defined and implemented, as Rust quite reasonably forbids
 //! to implement foreign traits on foreigh types
 
 use anyhow::Result;

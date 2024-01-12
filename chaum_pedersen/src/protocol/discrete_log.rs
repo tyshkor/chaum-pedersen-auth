@@ -1,10 +1,10 @@
-use crate::protocol::{Protocol, GroupParams};
-use crate::traits::{IntoBytes, FromBytes};
+use crate::protocol::{GroupParams, Protocol};
 use crate::traits::Random;
+use crate::traits::{FromBytes, IntoBytes};
+use anyhow::Result;
 use num_bigint::{BigUint, RandBigInt};
 use num_traits::One;
 use rand::rngs::OsRng;
-use anyhow::Result;
 
 #[derive(Clone)]
 pub struct DiscreteLog {}
@@ -20,7 +20,8 @@ impl Protocol for DiscreteLog {
 
     /// Calculates the commitment for the given secret `x` using the provided group parameters.
     fn commitment(
-        params: &Self::GroupParameters, x: &Self::Secret,
+        params: &Self::GroupParameters,
+        x: &Self::Secret,
     ) -> (Self::CommitParameters, Self::CommitmentRandom)
     where
         Self: Sized,
@@ -42,7 +43,9 @@ impl Protocol for DiscreteLog {
 
     /// Generates a random challenge for the protocol within the group's range.
     fn challenge_response(
-        params: &Self::GroupParameters, k: &Self::CommitmentRandom, c: &Self::Challenge,
+        params: &Self::GroupParameters,
+        k: &Self::CommitmentRandom,
+        c: &Self::Challenge,
         x: &Self::Secret,
     ) -> Self::Response
     where
@@ -57,7 +60,9 @@ impl Protocol for DiscreteLog {
 
     /// Verifies the response against the given commitment, challenge, and group.
     fn verify(
-        params: &Self::GroupParameters, s: &Self::Response, c: &Self::Challenge,
+        params: &Self::GroupParameters,
+        s: &Self::Response,
+        c: &Self::Challenge,
         cp: &Self::CommitParameters,
     ) -> bool {
         let (y1, y2, r1, r2) = cp;
@@ -105,5 +110,5 @@ mod tests {
         let recovered = <BigUint as FromBytes<BigUint>>::from(&bytes).unwrap();
         // ensure reversability of (de)serialization operations
         assert_eq!(original, recovered);
-    }    
+    }
 }

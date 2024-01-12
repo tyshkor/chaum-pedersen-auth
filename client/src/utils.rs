@@ -1,7 +1,7 @@
-use sha2::{Digest, Sha512};
-use chaum_pedersen::traits::{FromBytes, IntoBytes};
-use chaum_pedersen::traits::Random;
 use anyhow::Result;
+use chaum_pedersen::traits::Random;
+use chaum_pedersen::traits::{FromBytes, IntoBytes};
+use sha2::{Digest, Sha512};
 
 /// Hashes the provided secret string or generates a random value.
 pub fn hash_or_generate_random<T: FromBytes<T> + IntoBytes<T> + Random<T>>(
@@ -17,4 +17,3 @@ pub fn hash_or_generate_random<T: FromBytes<T> + IntoBytes<T> + Random<T>>(
         None => T::random().map_err(|error| error.context("Failed to generate random value")),
     }
 }
-

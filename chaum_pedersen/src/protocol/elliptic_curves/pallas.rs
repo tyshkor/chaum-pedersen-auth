@@ -1,6 +1,7 @@
-use crate::protocol::{Protocol, GroupParams};
-use crate::traits::{IntoBytes, FromBytes};
+use crate::protocol::{GroupParams, Protocol};
 use crate::traits::Random;
+use crate::traits::{FromBytes, IntoBytes};
+use anyhow::Result;
 use pasta_curves::group::ff::{Field, FromUniformBytes, PrimeField};
 use pasta_curves::group::Group;
 use pasta_curves::group::GroupEncoding;
@@ -8,7 +9,6 @@ use pasta_curves::pallas::{Point, Scalar};
 use pasta_curves::Eq;
 use pasta_curves::Fq;
 use rand_core::OsRng;
-use anyhow::Result;
 
 use super::errors::EllipticCurveError;
 
@@ -23,7 +23,8 @@ impl Protocol for PallasEllipticCurve {
     type CommitParameters = (Point, Point, Point, Point);
 
     fn commitment(
-        params: &Self::GroupParameters, x: &Self::Secret,
+        params: &Self::GroupParameters,
+        x: &Self::Secret,
     ) -> (Self::CommitParameters, Self::CommitmentRandom)
     where
         Self: Sized,
@@ -43,7 +44,9 @@ impl Protocol for PallasEllipticCurve {
     }
 
     fn challenge_response(
-        _: &Self::GroupParameters, k: &Self::CommitmentRandom, c: &Self::Challenge,
+        _: &Self::GroupParameters,
+        k: &Self::CommitmentRandom,
+        c: &Self::Challenge,
         x: &Self::Secret,
     ) -> Self::Response
     where
@@ -53,7 +56,9 @@ impl Protocol for PallasEllipticCurve {
     }
 
     fn verify(
-        params: &Self::GroupParameters, s: &Self::Response, c: &Self::Challenge,
+        params: &Self::GroupParameters,
+        s: &Self::Response,
+        c: &Self::Challenge,
         cp: &Self::CommitParameters,
     ) -> bool {
         let (y1, y2, r1, r2) = cp;
@@ -69,7 +74,9 @@ impl IntoBytes<Point> for Point {
 
 impl FromBytes<Point> for Point {
     fn from(bytes: &[u8]) -> Result<Point> {
-        let array: [u8; 32] = bytes.try_into().map_err(|_| EllipticCurveError::ScalarInvalidBytesLen)?;
+        let array: [u8; 32] = bytes
+            .try_into()
+            .map_err(|_| EllipticCurveError::ScalarInvalidBytesLen)?;
 
         Ok(Point::from_bytes(&array).unwrap())
     }
@@ -124,7 +131,8 @@ mod test {
     fn pallas_scalar_serialization() {
         let original = <pallas::Scalar as traits::Random<pallas::Scalar>>::random().unwrap();
         let bytes = pallas::Scalar::to(&original);
-        let recovered = <pallas::Scalar as traits::FromBytes<pallas::Scalar>>::from(&bytes).unwrap();
+        let recovered =
+            <pallas::Scalar as traits::FromBytes<pallas::Scalar>>::from(&bytes).unwrap();
         assert_eq!(original, recovered);
     }
 }

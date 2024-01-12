@@ -1,6 +1,6 @@
+use chaum_pedersen::enums::{EllipticCurve, Flavor};
 use structopt::StructOpt;
 use strum::VariantNames;
-use chaum_pedersen::enums::{Flavor, EllipticCurve};
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "client", about = "A client for the ZKPass server")]
@@ -20,4 +20,3 @@ pub struct Cli {
     #[structopt(short, long, possible_values = EllipticCurve::VARIANTS, default_value = "pallas", required_if("flavor", "elliptic_curve"))]
     pub curve: EllipticCurve,
 }
-

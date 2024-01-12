@@ -26,7 +26,8 @@ pub trait Protocol {
 
     /// Calculates the commitment in the Chaum-Pedersen protocol.
     fn commitment(
-        params: &Self::GroupParameters, x: &Self::Secret,
+        params: &Self::GroupParameters,
+        x: &Self::Secret,
     ) -> (Self::CommitParameters, Self::CommitmentRandom)
     where
         Self: Sized;
@@ -37,14 +38,18 @@ pub trait Protocol {
         Self: Sized;
 
     fn challenge_response(
-        params: &Self::GroupParameters, k: &Self::CommitmentRandom, c: &Self::Challenge,
+        params: &Self::GroupParameters,
+        k: &Self::CommitmentRandom,
+        c: &Self::Challenge,
         x: &Self::Secret,
     ) -> Self::Response
     where
         Self: Sized;
 
     fn verify(
-        params: &Self::GroupParameters, s: &Self::Response, c: &Self::Challenge,
+        params: &Self::GroupParameters,
+        s: &Self::Response,
+        c: &Self::Challenge,
         cp: &Self::CommitParameters,
     ) -> bool
     where

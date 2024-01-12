@@ -7,16 +7,18 @@ pub mod apis;
 pub mod cli;
 pub mod errors;
 
-use chaum_pedersen::protocol::constants::{DLOG_GROUP_PARAMS, VESTA_GROUP_PARAMS, PALLAS_GROUP_PARAMS};
-use structopt::StructOpt;
-use tonic::transport::Server;
+use anyhow::Result;
+use chaum_pedersen::enums::{EllipticCurve, Flavor};
+use chaum_pedersen::protocol::constants::{
+    DLOG_GROUP_PARAMS, PALLAS_GROUP_PARAMS, VESTA_GROUP_PARAMS,
+};
 use chaum_pedersen::protocol::discrete_log::DiscreteLog;
 use chaum_pedersen::protocol::elliptic_curves::pallas::PallasEllipticCurve;
 use chaum_pedersen::protocol::elliptic_curves::vesta::VestaEllipticCurve;
-use chaum_pedersen::enums::{Flavor, EllipticCurve};
 use service::zkp_auth::auth_server::AuthServer;
 use service::AuthService;
-use anyhow::Result;
+use structopt::StructOpt;
+use tonic::transport::Server;
 
 use crate::cli::Cli;
 use crate::errors::CliError;
@@ -54,27 +56,25 @@ async fn main() -> Result<()> {
                 .serve(addr)
                 .await?;
         }
-        Flavor::EllipticCurve => {
-            match curve {
-                EllipticCurve::Pallas => {
-                    let params = PALLAS_GROUP_PARAMS.to_owned();
-                    let auth = AuthService::<PallasEllipticCurve, _, _>::new(params);
-                    Server::builder()
-                        .add_service(AuthServer::new(auth))
-                        .serve(addr)
-                        .await?;
-                }
-
-                EllipticCurve::Vesta => {
-                    let params = VESTA_GROUP_PARAMS.to_owned();
-                    let auth = AuthService::<VestaEllipticCurve, _, _>::new(params);
-                    Server::builder()
-                        .add_service(AuthServer::new(auth))
-                        .serve(addr)
-                        .await?;
-                }
+        Flavor::EllipticCurve => match curve {
+            EllipticCurve::Pallas => {
+                let params = PALLAS_GROUP_PARAMS.to_owned();
+                let auth = AuthService::<PallasEllipticCurve, _, _>::new(params);
+                Server::builder()
+                    .add_service(AuthServer::new(auth))
+                    .serve(addr)
+                    .await?;
             }
-        }
+
+            EllipticCurve::Vesta => {
+                let params = VESTA_GROUP_PARAMS.to_owned();
+                let auth = AuthService::<VestaEllipticCurve, _, _>::new(params);
+                Server::builder()
+                    .add_service(AuthServer::new(auth))
+                    .serve(addr)
+                    .await?;
+            }
+        },
     }
 
     Ok(())

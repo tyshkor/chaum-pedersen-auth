@@ -1,10 +1,10 @@
 use crate::apis::user_impl::in_memory::InMemoryUserAPI;
-use crate::apis::{user::UserAPI, user::User};
+use crate::apis::{user::User, user::UserAPI};
+use chaum_pedersen::protocol::{GroupParams, Protocol};
 use chaum_pedersen::traits::{FromBytes, IntoBytes};
 use tokio::sync::Mutex;
 use tonic::{Request, Response, Status};
 use uuid::Uuid;
-use chaum_pedersen::protocol::{Protocol, GroupParams};
 
 // Protobuf generated module
 pub mod zkp_auth {
@@ -63,14 +63,13 @@ where
         + std::marker::Send,
 {
     async fn register(
-        &self, request: Request<RegisterRequest>,
+        &self,
+        request: Request<RegisterRequest>,
     ) -> Result<Response<RegisterResponse>, Status> {
         let req = request.into_inner();
 
-        let y1 =
-            T::from(&req.y1).or_else(|_| Err(Status::invalid_argument("Invalid y1")))?;
-        let y2 =
-            T::from(&req.y2).or_else(|_| Err(Status::invalid_argument("Invalid y2")))?;
+        let y1 = T::from(&req.y1).or_else(|_| Err(Status::invalid_argument("Invalid y1")))?;
+        let y2 = T::from(&req.y2).or_else(|_| Err(Status::invalid_argument("Invalid y2")))?;
 
         let user = User {
             username: req.user.clone(),
@@ -88,7 +87,8 @@ where
     }
 
     async fn create_authentication_challenge(
-        &self, request: Request<AuthenticationChallengeRequest>,
+        &self,
+        request: Request<AuthenticationChallengeRequest>,
     ) -> Result<Response<AuthenticationChallengeResponse>, Status> {
         let req = request.into_inner();
         let challenge = C::challenge(&self.params);
@@ -98,14 +98,10 @@ where
             let mut user = api
                 .read(&req.user)
                 .ok_or_else(|| Status::not_found("User not found"))?;
-            user.r1 = Some(
-                T::from(&req.r1)
-                    .or_else(|_| Err(Status::invalid_argument("Invalid r1")))?,
-            );
-            user.r2 = Some(
-                T::from(&req.r2)
-                    .or_else(|_| Err(Status::invalid_argument("Invalid r2")))?,
-            );
+            user.r1 =
+                Some(T::from(&req.r1).or_else(|_| Err(Status::invalid_argument("Invalid r1")))?);
+            user.r2 =
+                Some(T::from(&req.r2).or_else(|_| Err(Status::invalid_argument("Invalid r2")))?);
             user.clone()
         };
 
@@ -123,7 +119,8 @@ where
     }
 
     async fn verify_authentication(
-        &self, request: Request<AuthenticationAnswerRequest>,
+        &self,
+        request: Request<AuthenticationAnswerRequest>,
     ) -> Result<Response<AuthenticationAnswerResponse>, Status> {
         let req = request.into_inner();
 

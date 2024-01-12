@@ -1,9 +1,9 @@
+use chaum_pedersen::protocol::constants::DLOG_GROUP_PARAMS;
 use chaum_pedersen::protocol::discrete_log::DiscreteLog;
-use chaum_pedersen::protocol::{Protocol, GroupParams};
+use chaum_pedersen::protocol::{GroupParams, Protocol};
 use chaum_pedersen::traits::Random;
 use num_bigint::{BigUint, RandBigInt};
 use rand::rngs::OsRng;
-use chaum_pedersen::protocol::constants::DLOG_GROUP_PARAMS;
 
 mod run;
 

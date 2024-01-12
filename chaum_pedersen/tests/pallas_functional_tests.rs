@@ -1,10 +1,10 @@
+use chaum_pedersen::protocol::constants::PALLAS_GROUP_PARAMS;
 use chaum_pedersen::protocol::elliptic_curves::pallas::PallasEllipticCurve;
 use chaum_pedersen::protocol::Protocol;
 use pasta_curves::group::ff::Field;
 use pasta_curves::group::GroupEncoding;
 use pasta_curves::pallas::{Point, Scalar};
 use rand_core::OsRng;
-use chaum_pedersen::protocol::constants::PALLAS_GROUP_PARAMS;
 
 mod run;
 

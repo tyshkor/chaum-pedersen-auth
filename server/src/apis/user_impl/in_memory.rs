@@ -1,5 +1,5 @@
-use crate::apis::user::UserAPI;
 use crate::apis::user::User;
+use crate::apis::user::UserAPI;
 use chaum_pedersen::traits::{FromBytes, IntoBytes};
 use std::collections::HashMap;
 use uuid::Uuid;

@@ -1,20 +1,20 @@
-pub mod service;
 pub mod cli;
+pub mod service;
 pub mod utils;
 
+use crate::cli::Cli;
+use crate::utils::hash_or_generate_random;
+use chaum_pedersen::enums::{EllipticCurve, Flavor};
 use chaum_pedersen::protocol::constants::DLOG_GROUP_PARAMS;
 use chaum_pedersen::protocol::constants::PALLAS_GROUP_PARAMS;
 use chaum_pedersen::protocol::constants::VESTA_GROUP_PARAMS;
-use structopt::StructOpt;
 use chaum_pedersen::protocol::{
-    discrete_log::DiscreteLog,
-    elliptic_curves::pallas::PallasEllipticCurve, elliptic_curves::vesta::VestaEllipticCurve,
+    discrete_log::DiscreteLog, elliptic_curves::pallas::PallasEllipticCurve,
+    elliptic_curves::vesta::VestaEllipticCurve,
 };
 use service::run_protocol;
 use service::AuthClientService;
-use chaum_pedersen::enums::{Flavor, EllipticCurve};
-use crate::cli::Cli;
-use crate::utils::hash_or_generate_random;
+use structopt::StructOpt;
 
 /// This starts a client to interact with a server implementing the Chaum-Pedersen protocol through a CLI.
 #[tokio::main]
@@ -49,31 +49,29 @@ async fn main() -> anyhow::Result<()> {
             )
             .await?
         }
-        Flavor::EllipticCurve => {
-            match curve {
-                EllipticCurve::Pallas => {
-                    let ec_params = PALLAS_GROUP_PARAMS.to_owned();
-                    run_protocol::<PallasEllipticCurve, _, _>(
-                        &ec_params,
-                        &hash_or_generate_random(secret.as_ref())?,
-                        &user,
-                        &mut client,
-                    )
-                    .await?
-                }
-
-                EllipticCurve::Vesta => {
-                    let ec_params = VESTA_GROUP_PARAMS.to_owned();
-                    run_protocol::<VestaEllipticCurve, _, _>(
-                        &ec_params,
-                        &hash_or_generate_random(secret.as_ref())?,
-                        &user,
-                        &mut client,
-                    )
-                    .await?
-                }
+        Flavor::EllipticCurve => match curve {
+            EllipticCurve::Pallas => {
+                let ec_params = PALLAS_GROUP_PARAMS.to_owned();
+                run_protocol::<PallasEllipticCurve, _, _>(
+                    &ec_params,
+                    &hash_or_generate_random(secret.as_ref())?,
+                    &user,
+                    &mut client,
+                )
+                .await?
             }
-        }
+
+            EllipticCurve::Vesta => {
+                let ec_params = VESTA_GROUP_PARAMS.to_owned();
+                run_protocol::<VestaEllipticCurve, _, _>(
+                    &ec_params,
+                    &hash_or_generate_random(secret.as_ref())?,
+                    &user,
+                    &mut client,
+                )
+                .await?
+            }
+        },
     }
     Ok(())
 }

@@ -1,6 +1,6 @@
+use chaum_pedersen::enums::{EllipticCurve, Flavor};
 use structopt::StructOpt;
 use strum::VariantNames;
-use chaum_pedersen::enums::{Flavor, EllipticCurve};
 
 #[derive(StructOpt, Debug)]
 pub struct Cli {
@@ -15,4 +15,3 @@ pub struct Cli {
     #[structopt(short, long, possible_values = EllipticCurve::VARIANTS, default_value = "pallas", required_if("flavor", "elliptic_curve"))]
     pub curve: EllipticCurve,
 }
-

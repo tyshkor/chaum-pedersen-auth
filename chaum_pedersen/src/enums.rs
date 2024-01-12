@@ -13,4 +13,3 @@ pub enum EllipticCurve {
     Pallas,
     Vesta,
 }
-

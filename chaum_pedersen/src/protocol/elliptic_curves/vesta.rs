@@ -1,6 +1,7 @@
-use crate::protocol::{Protocol, GroupParams};
-use crate::traits::{IntoBytes, FromBytes};
+use crate::protocol::{GroupParams, Protocol};
 use crate::traits::Random;
+use crate::traits::{FromBytes, IntoBytes};
+use anyhow::Result;
 use pasta_curves::group::ff::Field;
 use pasta_curves::group::ff::{FromUniformBytes, PrimeField};
 use pasta_curves::group::Group;
@@ -10,7 +11,6 @@ use pasta_curves::vesta::Scalar;
 use pasta_curves::Ep;
 use pasta_curves::Fp;
 use rand_core::OsRng;
-use anyhow::Result;
 
 use super::errors::EllipticCurveError;
 
@@ -25,7 +25,8 @@ impl Protocol for VestaEllipticCurve {
     type CommitParameters = (Point, Point, Point, Point);
 
     fn commitment(
-        params: &Self::GroupParameters, x: &Self::Secret,
+        params: &Self::GroupParameters,
+        x: &Self::Secret,
     ) -> (Self::CommitParameters, Self::CommitmentRandom)
     where
         Self: Sized,
@@ -45,7 +46,9 @@ impl Protocol for VestaEllipticCurve {
     }
 
     fn challenge_response(
-        _: &Self::GroupParameters, k: &Self::CommitmentRandom, c: &Self::Challenge,
+        _: &Self::GroupParameters,
+        k: &Self::CommitmentRandom,
+        c: &Self::Challenge,
         x: &Self::Secret,
     ) -> Self::Response
     where
@@ -55,7 +58,9 @@ impl Protocol for VestaEllipticCurve {
     }
 
     fn verify(
-        params: &Self::GroupParameters, s: &Self::Response, c: &Self::Challenge,
+        params: &Self::GroupParameters,
+        s: &Self::Response,
+        c: &Self::Challenge,
         cp: &Self::CommitParameters,
     ) -> bool {
         let (y1, y2, r1, r2) = cp;
@@ -71,7 +76,9 @@ impl IntoBytes<Point> for Point {
 
 impl FromBytes<Point> for Point {
     fn from(bytes: &[u8]) -> Result<Point> {
-        let array: [u8; 32] = bytes.try_into().map_err(|_| EllipticCurveError::ScalarInvalidBytesLen)?;
+        let array: [u8; 32] = bytes
+            .try_into()
+            .map_err(|_| EllipticCurveError::ScalarInvalidBytesLen)?;
 
         Ok(Point::from_bytes(&array).unwrap())
     }
