@@ -83,3 +83,12 @@ impl FromBytes<BigUint> for BigUint {
     }
 }
 
+impl Random<BigUint> for BigUint {
+    fn random() -> Result<BigUint> {
+        use rand::RngCore;
+        let mut rng = OsRng;
+        let mut bytes = [0u8; 32];
+        rng.fill_bytes(&mut bytes);
+        Ok(BigUint::from_bytes_be(&bytes))
+    }
+}
