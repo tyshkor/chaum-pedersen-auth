@@ -1,5 +1,5 @@
 [workspace]
-members = ["chaum_pedersen", "server"]
+members = ["chaum_pedersen", "server", "client"]
 
 [workspace.dependencies]
 anyhow = "1.0.79"
