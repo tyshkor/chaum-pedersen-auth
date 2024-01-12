@@ -11,3 +11,12 @@ pub struct InMemoryUserAPI<T, S> {
     users: HashMap<String, User<T>>,
     auth_challenges: HashMap<String, AuthChallenge<S>>,
 }
+
+impl<T, S> InMemoryUserAPI<T, S> {
+    pub fn new() -> Self {
+        InMemoryUserAPI {
+            users: HashMap::new(),
+            auth_challenges: HashMap::new(),
+        }
+    }
+}
