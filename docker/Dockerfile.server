@@ -1,0 +1,34 @@
+# Use an official Rust runtime as a parent image
+FROM rust:1.75.0 as builder
+
+# Set the working directory in the container to /app
+WORKDIR /app
+
+# Copy the current directory contents into the container at /app
+COPY . .
+
+# Install protobuf-compiler
+RUN apt-get update \
+ && DEBIAN_FRONTEND=noninteractive \
+    apt-get install -y --no-install-recommends protobuf-compiler \
+ && rm -rf /var/lib/apt/lists/*
+
+# Build the server program using Cargo
+RUN cargo build --release
+
+# Start a new stage and copy the server binary from the builder stage
+FROM rust:1.75.0
+COPY --from=builder /app/target/release/server /usr/local/bin/server
+
+# Make port 50051 available to the world outside this container
+EXPOSE 50051
+
+# Set default environment variables
+ENV SERVER_HOST=0.0.0.0
+ENV SERVER_PORT=50051
+# ENV SERVER_FLAVOR=elliptic_curve
+ENV SERVER_FLAVOR=discrete_log
+# ENV SERVER_CURVE=pallas
+
+# Run the server program when the container launches
+CMD ["sh", "-c", "server --host ${SERVER_HOST} --port ${SERVER_PORT} --flavor ${SERVER_FLAVOR} --curve ${SERVER_CURVE}"]
