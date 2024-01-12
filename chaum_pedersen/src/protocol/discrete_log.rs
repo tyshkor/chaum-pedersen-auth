@@ -92,3 +92,18 @@ impl Random<BigUint> for BigUint {
         Ok(BigUint::from_bytes_be(&bytes))
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use num_bigint::ToBigUint;
+
+    #[test]
+    fn biguint_serialization() {
+        let original = 34329847u64.to_biguint().unwrap();
+        let bytes = BigUint::to(&original);
+        let recovered = <BigUint as FromBytes<BigUint>>::from(&bytes).unwrap();
+        // ensure reversability of (de)serialization operations
+        assert_eq!(original, recovered);
+    }    
+}
