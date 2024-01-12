@@ -9,3 +9,14 @@ use chaum_pedersen::traits::Random;
 pub mod zkp_auth {
     tonic::include_proto!("zkp_auth");
 }
+
+// Importing specific structures from the `zkp_auth` module.
+use zkp_auth::{
+    auth_client::AuthClient, AuthenticationAnswerRequest, AuthenticationChallengeRequest,
+    RegisterRequest,
+};
+
+pub struct AuthClientService {
+    /// The gRPC client for the ZKP authentication service.
+    client: AuthClient<Channel>,
+}
