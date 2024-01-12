@@ -8,7 +8,6 @@ edition = "2021"
 [dependencies]
 anyhow.workspace = true
 chaum_pedersen = { path = "../chaum_pedersen" }
-log.workspace = true
 num-bigint.workspace = true
 pasta_curves.workspace = true
 prost-types.workspace = true
