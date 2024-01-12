@@ -25,3 +25,22 @@ pub struct AuthService<C, T, S> {
     _type_phantom: std::marker::PhantomData<C>,
     _scalar_phantom: std::marker::PhantomData<S>,
 }
+
+impl<
+        C,
+        T: Send + Sync + Clone + FromBytes<T> + IntoBytes<T> + 'static,
+        S: Send + Sync + Clone + FromBytes<S> + IntoBytes<S> + 'static,
+    > AuthService<C, T, S>
+{
+    pub fn new(params: GroupParams<T>) -> Self {
+        let api = Mutex::new(
+            Box::new(InMemoryUserAPI::<T, S>::new()) as Box<dyn UserAPI<T, S> + Send + Sync>
+        );
+        Self {
+            params,
+            api,
+            _type_phantom: std::marker::PhantomData,
+            _scalar_phantom: std::marker::PhantomData,
+        }
+    }
+}
